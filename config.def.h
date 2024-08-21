@@ -170,6 +170,9 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          entermode,           {.i = POWER} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,          entermode,           {.i = POWER} },
+	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
+	{ MODKEY,                    XKB_KEY_X,          entermode,      {.i = EXECUTE} },
 
     // Volume control keybinds
     {0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
@@ -183,10 +186,8 @@ static const Key keys[] = {
     {0, XKB_KEY_XF86AudioMute, spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle")},
     {0, XKB_KEY_XF86AudioMicMute, spawn, SHCMD("pactl set-source-mute @DEFAULT_SINK@ toggle")},
 
-	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
-
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
-	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
+	//{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
 	 */
@@ -199,21 +200,36 @@ static const Modekey modekeys[] = {
 	/* mode      modifier                  key                 function        argument */
 	{ EXECUTE, { 0, XKB_KEY_b, spawn, SHCMD("firefox") } },
 	{ EXECUTE, { 0, XKB_KEY_b, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_B, spawn, SHCMD("firefox") } },
+	{ EXECUTE, { 0, XKB_KEY_B, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_s, spawn, SHCMD("steam") } },
 	{ EXECUTE, { 0, XKB_KEY_s, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_S, spawn, SHCMD("steam") } },
+	{ EXECUTE, { 0, XKB_KEY_S, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_d, spawn, SHCMD("discord") } },
 	{ EXECUTE, { 0, XKB_KEY_d, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_D, spawn, SHCMD("discord") } },
+	{ EXECUTE, { 0, XKB_KEY_D, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_m, spawn, SHCMD("prismlauncher") } },
 	{ EXECUTE, { 0, XKB_KEY_m, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_M, spawn, SHCMD("prismlauncher") } },
+	{ EXECUTE, { 0, XKB_KEY_M, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_Escape, entermode, {.i = NORMAL} } },
     { EXECUTE, {MODKEY, XKB_KEY_x, entermode, {.i = NORMAL}} },
+    { EXECUTE, {MODKEY, XKB_KEY_X, entermode, {.i = NORMAL}} },
 
     {POWER, {0, XKB_KEY_q, quit, {0}}},
+    {POWER, {0, XKB_KEY_Q, quit, {0}}},
     {POWER, {0, XKB_KEY_p, spawn, {.v = poweroffcmd}}},
+    {POWER, {0, XKB_KEY_P, spawn, {.v = poweroffcmd}}},
     {POWER, {0, XKB_KEY_s, spawn, {.v = sleepcmd}}},
     {POWER, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
+    {POWER, {0, XKB_KEY_S, spawn, {.v = sleepcmd}}},
+    {POWER, {0, XKB_KEY_S, entermode, {.i = NORMAL}}},
     {POWER, {0, XKB_KEY_h, spawn, {.v = hibercmd}}},
     {POWER, {0, XKB_KEY_h, entermode, {.i = NORMAL}}},
+    {POWER, {0, XKB_KEY_H, spawn, {.v = hibercmd}}},
+    {POWER, {0, XKB_KEY_H, entermode, {.i = NORMAL}}},
 };
 
 static const Button buttons[] = {
