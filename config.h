@@ -6,7 +6,7 @@
 /* appearance */
 static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
-static const unsigned int borderpx         = 1;  /* border pixel of windows */
+static const unsigned int borderpx         = 3;  /* border pixel of windows */
 static const float rootcolor[]             = COLOR(0x222222ff);
 static const float bordercolor[]           = COLOR(0x444444ff);
 static const float focuscolor[]            = COLOR(0x005577ff);
@@ -16,9 +16,11 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 
 enum {
 	EXECUTE,
+    POWER,
 };
 const char *modes_labels[] = {
 	"execute",
+    "power",
 };
 
 /* tagging - TAGCOUNT must be no greater than 31 */
@@ -128,6 +130,8 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 /* commands */
 static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
+static const char *sleepcmd[] = { "systemctl", "suspend", NULL };
+static const char *hibercmd[] = { "systemctl", "hibernate", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -164,11 +168,19 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          entermode,           {.i = POWER} },
 
-    // Volume control
+    // Volume control keybinds
     {0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
     {0, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%")},
+    {WLR_MODIFIER_SHIFT, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +1%")},
+    {WLR_MODIFIER_SHIFT, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -1%")},
+    {MODKEY, XKB_KEY_equal, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
+    {MODKEY, XKB_KEY_minus, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%")},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_plus, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +1%")},
+    {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_underscore, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -1%")},
+    {0, XKB_KEY_XF86AudioMute, spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle")},
+    {0, XKB_KEY_XF86AudioMicMute, spawn, SHCMD("pactl set-source-mute @DEFAULT_SINK@ toggle")},
 
 	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
 
@@ -194,6 +206,12 @@ static const Modekey modekeys[] = {
 	{ EXECUTE, { 0, XKB_KEY_m, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_Escape, entermode, {.i = NORMAL} } },
     { EXECUTE, {MODKEY, XKB_KEY_x, entermode, {.i = NORMAL}} },
+
+    {POWER, {0, XKB_KEY_q, quit, {0}}},
+    {POWER, {0, XKB_KEY_s, spawn, {.v = sleepcmd}}},
+    {POWER, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
+    {POWER, {0, XKB_KEY_h, spawn, {.v = hibercmd}}},
+    {POWER, {0, XKB_KEY_h, entermode, {.i = NORMAL}}},
 };
 
 static const Button buttons[] = {
