@@ -132,6 +132,7 @@ static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
 static const char *sleepcmd[] = { "systemctl", "suspend", NULL };
 static const char *hibercmd[] = { "systemctl", "hibernate", NULL };
+static const char *poweroffcmd[] = { "poweroff", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -208,6 +209,7 @@ static const Modekey modekeys[] = {
     { EXECUTE, {MODKEY, XKB_KEY_x, entermode, {.i = NORMAL}} },
 
     {POWER, {0, XKB_KEY_q, quit, {0}}},
+    {POWER, {0, XKB_KEY_p, spawn, {.v = poweroffcmd}}},
     {POWER, {0, XKB_KEY_s, spawn, {.v = sleepcmd}}},
     {POWER, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
     {POWER, {0, XKB_KEY_h, spawn, {.v = hibercmd}}},
