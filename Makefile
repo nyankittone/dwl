@@ -59,6 +59,9 @@ dist: clean
 	tar -caf dwl-$(VERSION).tar.gz dwl-$(VERSION)
 	rm -rf dwl-$(VERSION)
 
+# TODO: Add a new variable, LOCALDESTDIR, for doing a new rule, localinstall.
+# How to go about this? idk
+#
 install: dwl
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f dwl $(DESTDIR)$(PREFIX)/bin
@@ -69,6 +72,22 @@ install: dwl
 	mkdir -p $(DESTDIR)$(DATADIR)/wayland-sessions
 	cp -f dwl.desktop $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
 	chmod 644 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
+
+# TODO: figure out how to get manpages installed locally...
+localinstall: dwl
+	mkdir -p $(HOME)/.local/bin
+	cp -f dwl $(HOME)/.local/bin
+	chmod 755 $(HOME)/.local/bin/dwl
+	#mkdir -p $(DESTDIR)$(MANDIR)/man1
+	#cp -f dwl.1 $(DESTDIR)$(MANDIR)/man1
+	#chmod 644 $(DESTDIR)$(MANDIR)/man1/dwl.1
+	#mkdir -p $(DESTDIR)$(DATADIR)/wayland-sessions
+	#cp -f dwl.desktop $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
+	#chmod 644 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
+
+localuninstall:
+	rm -f $(HOME)/.local/bin/dwl
+
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/dwl $(DESTDIR)$(MANDIR)/man1/dwl.1 \
 		$(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop

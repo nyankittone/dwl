@@ -5,6 +5,7 @@ PKG_CONFIG = pkg-config
 
 # paths
 PREFIX = /usr/local
+LOCALPREFIX = /home/tiffany/.local
 MANDIR = $(PREFIX)/share/man
 DATADIR = $(PREFIX)/share
 
