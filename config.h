@@ -166,6 +166,10 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
 
+    // Volume control
+    {0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
+    {0, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%")},
+
 	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
@@ -182,7 +186,14 @@ static const Modekey modekeys[] = {
 	/* mode      modifier                  key                 function        argument */
 	{ EXECUTE, { 0, XKB_KEY_b, spawn, SHCMD("firefox") } },
 	{ EXECUTE, { 0, XKB_KEY_b, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_s, spawn, SHCMD("steam") } },
+	{ EXECUTE, { 0, XKB_KEY_s, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_d, spawn, SHCMD("discord") } },
+	{ EXECUTE, { 0, XKB_KEY_d, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_m, spawn, SHCMD("prismlauncher") } },
+	{ EXECUTE, { 0, XKB_KEY_m, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_Escape, entermode, {.i = NORMAL} } },
+    { EXECUTE, {MODKEY, XKB_KEY_x, entermode, {.i = NORMAL}} },
 };
 
 static const Button buttons[] = {
