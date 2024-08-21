@@ -77,13 +77,6 @@ install: dwl
 localinstall: dwl
 	mkdir -p $(HOME)/.local/bin
 	cp -f dwl $(HOME)/.local/bin
-	chmod 755 $(HOME)/.local/bin/dwl
-	#mkdir -p $(DESTDIR)$(MANDIR)/man1
-	#cp -f dwl.1 $(DESTDIR)$(MANDIR)/man1
-	#chmod 644 $(DESTDIR)$(MANDIR)/man1/dwl.1
-	#mkdir -p $(DESTDIR)$(DATADIR)/wayland-sessions
-	#cp -f dwl.desktop $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
-	#chmod 644 $(DESTDIR)$(DATADIR)/wayland-sessions/dwl.desktop
 
 localuninstall:
 	rm -f $(HOME)/.local/bin/dwl
