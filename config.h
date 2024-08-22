@@ -37,6 +37,7 @@ static const char *const autostart[] = {
     "swaybg", "-i", "/home/tiffany/Pictures/Wallpapers/cool_madeline_wallpaper.png", NULL,
     "foot", NULL,
     "firefox", NULL,
+    "discord", NULL,
         //"wbg", "/path/to/your/image", NULL,
         NULL /* terminate */
 };
@@ -47,7 +48,8 @@ static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "Mozilla Firefox",  NULL,       1 << 2,       0,           -1 }, /* Start on ONLY tag "3" */
+	{ "discord",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
+	{ "mozilla firefox",  NULL,       1,       0,           -1 }, /* Start on ONLY tag "3" */
 };
 
 /* layout(s) */
@@ -188,7 +190,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
 	{ MODKEY,                    XKB_KEY_X,          entermode,      {.i = EXECUTE} },
 
-    // Volume control keybinds
+    // Volume control keybinds (might move these out of WM-specific config)
     {0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
     {0, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%")},
     {WLR_MODIFIER_SHIFT, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +1%")},
@@ -199,6 +201,12 @@ static const Key keys[] = {
     {MODKEY | WLR_MODIFIER_SHIFT, XKB_KEY_underscore, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -1%")},
     {0, XKB_KEY_XF86AudioMute, spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle")},
     {0, XKB_KEY_XF86AudioMicMute, spawn, SHCMD("pactl set-source-mute @DEFAULT_SINK@ toggle")},
+
+    // Brightness controls (might move these out of WM-specific config)
+    {0, XKB_KEY_XF86MonBrightnessUp, spawn, SHCMD("brightnessctl s +10%")},
+    {0, XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("brightnessctl s 10%-")},
+    {WLR_MODIFIER_SHIFT, XKB_KEY_XF86MonBrightnessUp, spawn, SHCMD("brightnessctl s +2%")},
+    {WLR_MODIFIER_SHIFT, XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("brightnessctl s 2%-")},
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	//{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
