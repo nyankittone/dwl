@@ -18,6 +18,7 @@ enum {
 	EXECUTE,
     POWER,
 };
+
 const char *modes_labels[] = {
 	"execute",
     "power",
@@ -133,19 +134,20 @@ static const char *menucmd[] = { "wmenu-run", NULL };
 static const char *sleepcmd[] = { "systemctl", "suspend", NULL };
 static const char *hibercmd[] = { "systemctl", "hibernate", NULL };
 static const char *poweroffcmd[] = { "poweroff", NULL };
+static const char *rebootcmd[] = { "reboot", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY, XKB_KEY_Return,     spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
-	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT,                    XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
@@ -214,14 +216,20 @@ static const Modekey modekeys[] = {
 	{ EXECUTE, { 0, XKB_KEY_m, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_M, spawn, SHCMD("prismlauncher") } },
 	{ EXECUTE, { 0, XKB_KEY_M, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_i, spawn, SHCMD("gimp") } },
+	{ EXECUTE, { 0, XKB_KEY_i, entermode, {.i = NORMAL} } },
+	{ EXECUTE, { 0, XKB_KEY_I, spawn, SHCMD("gimp") } },
+	{ EXECUTE, { 0, XKB_KEY_I, entermode, {.i = NORMAL} } },
 	{ EXECUTE, { 0, XKB_KEY_Escape, entermode, {.i = NORMAL} } },
     { EXECUTE, {MODKEY, XKB_KEY_x, entermode, {.i = NORMAL}} },
     { EXECUTE, {MODKEY, XKB_KEY_X, entermode, {.i = NORMAL}} },
 
-    {POWER, {0, XKB_KEY_q, quit, {0}}},
-    {POWER, {0, XKB_KEY_Q, quit, {0}}},
+    {POWER, {0, XKB_KEY_q, quit, {.i = 0}}},
+    {POWER, {0, XKB_KEY_Q, quit, {.i = 0}}},
     {POWER, {0, XKB_KEY_p, spawn, {.v = poweroffcmd}}},
     {POWER, {0, XKB_KEY_P, spawn, {.v = poweroffcmd}}},
+    {POWER, {0, XKB_KEY_r, spawn, {.v = rebootcmd}}},
+    {POWER, {0, XKB_KEY_R, spawn, {.v = rebootcmd}}},
     {POWER, {0, XKB_KEY_s, spawn, {.v = sleepcmd}}},
     {POWER, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
     {POWER, {0, XKB_KEY_S, spawn, {.v = sleepcmd}}},

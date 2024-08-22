@@ -2133,6 +2133,9 @@ void
 quit(const Arg *arg)
 {
 	wl_display_terminate(dpy);
+    exit(arg->i); // NOTE: This code may be wrong! Without this exit(), wl_display_terminate()
+                  // still exits the program. NOOOOO clue how, but I feel like I'm doing something
+                  // wrong.
 }
 
 void
