@@ -17,11 +17,17 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 enum {
 	EXECUTE,
     POWER,
+    SCREENSHOT_ROOT,
+    SCREENSHOT_CLIP,
+    SCREENSHOT_FILE,
 };
 
 const char *modes_labels[] = {
 	"execute",
     "power",
+    "screenshot",
+    "screenshot/clipboard",
+    "screenshot/file",
 };
 
 /* tagging - TAGCOUNT must be no greater than 31 */
@@ -153,7 +159,7 @@ static const char *rebootcmd[] = { "reboot", NULL };
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
+	//{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
 	{ MODKEY, XKB_KEY_Return,     spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
@@ -185,10 +191,13 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
+
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          entermode,           {.i = POWER} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,          entermode,           {.i = POWER} },
 	{ MODKEY,                    XKB_KEY_x,          entermode,      {.i = EXECUTE} },
 	{ MODKEY,                    XKB_KEY_X,          entermode,      {.i = EXECUTE} },
+	{ MODKEY,                    XKB_KEY_p,          entermode,      {.i = SCREENSHOT_ROOT} },
+	{ MODKEY,                    XKB_KEY_P,          entermode,      {.i = SCREENSHOT_ROOT} },
 
     // Volume control keybinds (might move these out of WM-specific config)
     {0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
@@ -258,6 +267,31 @@ static const Modekey modekeys[] = {
     {POWER, {0, XKB_KEY_h, entermode, {.i = NORMAL}}},
     {POWER, {0, XKB_KEY_H, spawn, {.v = hibercmd}}},
     {POWER, {0, XKB_KEY_H, entermode, {.i = NORMAL}}},
+
+    {SCREENSHOT_ROOT, {0, XKB_KEY_Escape, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_ROOT, {0, XKB_KEY_c, entermode, {.i = SCREENSHOT_CLIP}}},
+    {SCREENSHOT_ROOT, {0, XKB_KEY_C, entermode, {.i = SCREENSHOT_CLIP}}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_Escape, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_a, spawn, SHCMD("take_screenshot.sh clipboard all")}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_a, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_A, spawn, SHCMD("take_screenshot.sh clipboard all")}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_A, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_s, spawn, SHCMD("take_screenshot.sh clipboard select")}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_S, spawn, SHCMD("take_screenshot.sh clipboard select")}},
+    {SCREENSHOT_CLIP, {0, XKB_KEY_S, entermode, {.i = NORMAL}}},
+
+    {SCREENSHOT_ROOT, {0, XKB_KEY_f, entermode, {.i = SCREENSHOT_FILE}}},
+    {SCREENSHOT_ROOT, {0, XKB_KEY_F, entermode, {.i = SCREENSHOT_FILE}}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_Escape, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_a, spawn, SHCMD("take_screenshot.sh file all")}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_a, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_A, spawn, SHCMD("take_screenshot.sh file all")}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_A, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_s, spawn, SHCMD("take_screenshot.sh file select")}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_s, entermode, {.i = NORMAL}}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_S, spawn, SHCMD("take_screenshot.sh file select")}},
+    {SCREENSHOT_FILE, {0, XKB_KEY_S, entermode, {.i = NORMAL}}},
 };
 
 static const Button buttons[] = {
