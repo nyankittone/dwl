@@ -9,11 +9,11 @@ static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
 static const unsigned int gappx            = 14; /* gap pixel between windows */
-static const unsigned int borderpx         = 4;  /* border pixel of windows */
-static const float rootcolor[]             = COLOR(0x222222ff);
-static const float bordercolor[]           = COLOR(0x444444ff);
-static const float focuscolor[]            = COLOR(0x005577ff);
-static const float urgentcolor[]           = COLOR(0xff0000ff);
+static const unsigned int borderpx         = 3;  /* border pixel of windows */
+static const float rootcolor[]             = COLOR(0x110b1aff);
+static const float bordercolor[]           = COLOR(0x282836ff);
+static const float focuscolor[]            = COLOR(0xb586f3ff);
+static const float urgentcolor[]           = COLOR(0xff5569ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
 
