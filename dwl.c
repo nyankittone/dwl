@@ -1742,6 +1742,9 @@ keypress(struct wl_listener *listener, void *data)
 	/* Pass unhandled keycodes along to the client. */
 	wlr_seat_keyboard_notify_key(seat, event->time_msec,
 			event->keycode, event->state);
+
+    // Hiding the cursor if any key is pressed. TODO: Add a config option for this!!!
+    hidecursor(NULL);
 }
 
 void
