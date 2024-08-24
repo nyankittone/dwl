@@ -2314,6 +2314,9 @@ run(char *startup_cmd)
 	if (!wlr_backend_start(backend))
 		die("startup: backend_start");
 
+    // HACK: Changing the tag we start on by default, so that `foot` will start on that tag :3
+    view(&(Arg){.ui = default_tags});
+
 	/* Now that the socket exists and the backend is started, run the startup command */
 	autostartexec();
 	if (startup_cmd) {

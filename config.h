@@ -33,6 +33,8 @@ const char *modes_labels[] = {
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (9)
 
+static const unsigned int default_tags = 1 << 1;
+
 /* logging */
 static int log_level = WLR_ERROR;
 
@@ -44,10 +46,10 @@ static const char *const autostart[] = {
     "foot", NULL,
     "firefox", NULL,
     "discord", NULL,
+    "aplay", "/home/tiffany/Sounds/PlayStation 1 Startup.wav", NULL,
         //"wbg", "/path/to/your/image", NULL,
         NULL /* terminate */
 };
-
 
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
@@ -55,7 +57,7 @@ static const Rule rules[] = {
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "discord",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "mozilla firefox",  NULL,       1,       0,           -1 }, /* Start on ONLY tag "3" */
+	{ NULL,  "Mozilla Firefox",       1,       0,           -1 }, /* Start on ONLY tag "3" */
 };
 
 /* layout(s) */
