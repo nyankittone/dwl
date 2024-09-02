@@ -49,8 +49,9 @@ static const char *const autostart[] = {
     "gammastep", NULL,
     "foot", NULL,
     "firefox", NULL,
-    "discord", NULL,
+    "vesktop", NULL,
     "aplay", "/home/tiffany/Sounds/PlayStation 1 Startup.wav", NULL,
+    "sh", "-c", "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=dwl", NULL,
         NULL /* terminate */
 };
 
@@ -59,7 +60,7 @@ static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "discord",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
+	{ "vesktop",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ NULL,  "Mozilla Firefox",       1,       0,           -1 }, /* Start on ONLY tag "3" */
 };
 
