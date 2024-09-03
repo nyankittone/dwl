@@ -12,7 +12,7 @@ static const unsigned int gappx            = 14; /* gap pixel between windows */
 static const unsigned int borderpx         = 3;  /* border pixel of windows */
 static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
-static const char *fonts[]                 = {"monospace:size=10"};
+static const char *fonts[]                 = {"CaskaydiaMono Nerd Font:size=12"};
 static const float rootcolor[]             = COLOR(0x110b1aff);
 static const float bordercolor[]           = COLOR(0x282836ff);
 static const float focuscolor[]            = COLOR(0xb586f3ff);
@@ -21,9 +21,9 @@ static const float urgentcolor[]           = COLOR(0xff5569ff);
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
 static uint32_t colors[][3]                = {
 	/*               fg          bg          border    */
-	[SchemeNorm] = { 0xbbbbbbff, 0x222222ff, 0x444444ff },
-	[SchemeSel]  = { 0xeeeeeeff, 0x005577ff, 0x005577ff },
-	[SchemeUrg]  = { 0,          0,          0x770000ff },
+	[SchemeNorm] = { 0xfceeffff, 0x100e21dd, 0x282836ff },
+	[SchemeSel]  = { 0xfceeffff, 0x682aabdd, 0xb586f3ff },
+	[SchemeUrg]  = { 0xfceeffff,          0xce4559dd,          0xff5569ff },
 };
 
 enum {
@@ -53,7 +53,6 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-    "waybar", NULL,
     "dunst", NULL,
     "swaybg", "-i", "/home/tiffany/Pictures/Wallpapers/cool_madeline_wallpaper.png", NULL,
     "gammastep", NULL,
