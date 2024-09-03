@@ -1,0 +1,152 @@
+--- dwl.c
++++ dwl.c
+@@ -644,17 +693,102 @@ axisnotify(struct wl_listener *listener, void *data)
+ 			event->delta_discrete, event->source, event->relative_direction);
+ }
+ 
++bool
++baracceptsinput(struct wlr_scene_buffer *buffer, double *sx, double *sy)
++{
++	return true;
++}
++
++void
++bufdestroy(struct wlr_buffer *wlr_buffer)
++{
++	Buffer *buf = wl_container_of(wlr_buffer, buf, base);
++	if (buf->busy)
++		wl_list_remove(&buf->release.link);
++	drwl_image_destroy(buf->image);
++	free(buf);
++}
++
++bool
++bufdatabegin(struct wlr_buffer *wlr_buffer, uint32_t flags,
++		void **data, uint32_t *format, size_t *stride)
++{
++	Buffer *buf = wl_container_of(wlr_buffer, buf, base);
++
++	if (flags & WLR_BUFFER_DATA_PTR_ACCESS_WRITE) return false;
++
++	*data   = buf->data;
++	*stride = wlr_buffer->width * 4;
++	*format = DRM_FORMAT_ARGB8888;
++
++	return true;
++}
++
++void
++bufdataend(struct wlr_buffer *wlr_buffer)
++{
++}
++
++Buffer *
++bufmon(Monitor *m)
++{
++	size_t i;
++	Buffer *buf = NULL;
++
++	for (i = 0; i < LENGTH(m->pool); i++) {
++		if (m->pool[i]) {
++			if (m->pool[i]->busy)
++				continue;
++			buf = m->pool[i];
++			break;
++		}
++
++		buf = ecalloc(1, sizeof(Buffer) + (m->b.width * 4 * m->b.height));
++		buf->image = drwl_image_create(NULL, m->b.width, m->b.height, buf->data);
++		wlr_buffer_init(&buf->base, &buffer_impl, m->b.width, m->b.height);
++		m->pool[i] = buf;
++		break;
++	}
++	if (!buf)
++		return NULL;
++
++	buf->busy = true;
++	LISTEN(&buf->base.events.release, &buf->release, bufrelease);
++	wlr_buffer_lock(&buf->base);
++	drwl_setimage(m->drw, buf->image);
++	return buf;
++}
++
++void
++bufrelease(struct wl_listener *listener, void *data)
++{
++	Buffer *buf = wl_container_of(listener, buf, release);
++	buf->busy = false;
++	wl_list_remove(&buf->release.link);
++}
++
+ void
+ buttonpress(struct wl_listener *listener, void *data)
+ {
++	unsigned int i = 0, x = 0;
++	double cx;
++	unsigned int click;
+ 	struct wlr_pointer_button_event *event = data;
+ 	struct wlr_keyboard *keyboard;
++	struct wlr_scene_node *node;
++	struct wlr_scene_buffer *buffer;
+ 	uint32_t mods;
++	Arg arg = {0};
+ 	Client *c;
+ 	const Button *b;
+ 
+ 	wlr_idle_notifier_v1_notify_activity(idle_notifier, seat);
+ 
++	click = ClkRoot;
++	xytonode(cursor->x, cursor->y, NULL, &c, NULL, NULL, NULL);
++	if (c)
++		click = ClkClient;
++
+ 	switch (event->state) {
+ 	case WL_POINTER_BUTTON_STATE_PRESSED:
+ 		cursor_mode = CurPressed;
+@@ -2187,46 +2427,6 @@ pointerfocus(Client *c, struct wlr_surface *surface, double sx, double sy,
+ 	wlr_seat_pointer_notify_motion(seat, time, sx, sy);
+ }
+ 
+-void
+-printstatus(void)
+-{
+-	Monitor *m = NULL;
+-	Client *c;
+-	uint32_t occ, urg, sel;
+-	const char *appid, *title;
+-
+-	wl_list_for_each(m, &mons, link) {
+-		occ = urg = 0;
+-		wl_list_for_each(c, &clients, link) {
+-			if (c->mon != m)
+-				continue;
+-			occ |= c->tags;
+-			if (c->isurgent)
+-				urg |= c->tags;
+-		}
+-		if ((c = focustop(m))) {
+-			title = client_get_title(c);
+-			appid = client_get_appid(c);
+-			printf("%s title %s\n", m->wlr_output->name, title ? title : broken);
+-			printf("%s appid %s\n", m->wlr_output->name, appid ? appid : broken);
+-			printf("%s fullscreen %d\n", m->wlr_output->name, c->isfullscreen);
+-			printf("%s floating %d\n", m->wlr_output->name, c->isfloating);
+-			sel = c->tags;
+-		} else {
+-			printf("%s title \n", m->wlr_output->name);
+-			printf("%s appid \n", m->wlr_output->name);
+-			printf("%s fullscreen \n", m->wlr_output->name);
+-			printf("%s floating \n", m->wlr_output->name);
+-			sel = 0;
+-		}
+-
+-		printf("%s selmon %u\n", m->wlr_output->name, m == selmon);
+-		printf("%s tags %"PRIu32" %"PRIu32" %"PRIu32" %"PRIu32"\n",
+-			m->wlr_output->name, occ, m->tagset[m->seltags], sel, urg);
+-		printf("%s layout %s\n", m->wlr_output->name, m->ltsymbol);
+-	}
+-	fflush(stdout);
+-}
+ 
+ void
+ powermgrsetmode(struct wl_listener *listener, void *data)
