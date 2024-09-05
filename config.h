@@ -14,6 +14,8 @@ static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
 static const char *fonts[]                 = {"CaskaydiaMono Nerd Font:size=12"};
 static const float rootcolor[]             = COLOR(0x110b1aff);
+static const int trayspacing               = 4; /* Spacing between icons in system tray */
+static const int traymargins               = 4; /* System tray inner margins */
 static const float bordercolor[]           = COLOR(0x282836ff);
 static const float focuscolor[]            = COLOR(0xb586f3ff);
 static const float urgentcolor[]           = COLOR(0xff5569ff);
@@ -45,7 +47,6 @@ const char *modes_labels[] = {
 /* tagging - TAGCOUNT must be no greater than 31 */
 //#define TAGCOUNT (9)
 static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
 static const unsigned int default_tags = 1 << 1;
 
 /* logging */

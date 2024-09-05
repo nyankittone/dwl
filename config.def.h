@@ -14,6 +14,8 @@ static const int showbar                   = 1; /* 0 means no bar */
 static const int topbar                    = 1; /* 0 means bottom bar */
 static const char *fonts[]                 = {"CaskaydiaMono Nerd Font:size=12"};
 static const float rootcolor[]             = COLOR(0x110b1aff);
+static const int trayspacing               = 4; /* Spacing between icons in system tray */
+static const int traymargins               = 4; /* System tray inner margins */
 static const float bordercolor[]           = COLOR(0x282836ff);
 static const float focuscolor[]            = COLOR(0xb586f3ff);
 static const float urgentcolor[]           = COLOR(0xff5569ff);
