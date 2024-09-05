@@ -47,7 +47,6 @@ const char *modes_labels[] = {
 /* tagging - TAGCOUNT must be no greater than 31 */
 //#define TAGCOUNT (9)
 static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
 static const unsigned int default_tags = 1 << 1;
 
 /* logging */

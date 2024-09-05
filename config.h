@@ -71,6 +71,7 @@ static const Rule rules[] = {
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "vesktop",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
+	{ "discord",     NULL,       1 << 2,            0,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ NULL,  "Mozilla Firefox",       1,       0,           -1 }, /* Start on ONLY tag "3" */
 };
 
