@@ -505,6 +505,9 @@ static const struct wlr_buffer_impl buffer_impl = {
     .end_data_ptr_access = bufdataend,
 };
 
+static pthread_mutex_t profile_mutex = PTHREAD_MUTEX_INITIALIZER;
+static size_t profile_i = 0;
+
 #ifdef XWAYLAND
 static void activatex11(struct wl_listener *listener, void *data);
 static void associatex11(struct wl_listener *listener, void *data);
@@ -3089,9 +3092,46 @@ setsel(struct wl_listener *listener, void *data)
 	wlr_seat_set_selection(seat, event->source, event->serial);
 }
 
+static void*
+get_power_mode(void *_) {
+    pthread_mutex_lock(&profile_mutex);
+    // run the powerprofilesctl command lol
+    // if we get no output, that's probably an error
+
+    FILE *pipe = popen("powerprofilesctl get", "r");
+    char out_buffer[64];
+
+    // read a line (this code is probably super-slowwwww)
+    fgets(out_buffer, 64, pipe);
+    out_buffer[63] = '\0';
+
+    size_t last = strlen(out_buffer) - 1;
+    if(out_buffer[last] == '\n')
+        out_buffer[last] = '\0';
+
+    // get the index in power_modes we need
+    for(char **mode = power_modes; *mode; mode++) {
+        if(!strcmp(*mode, out_buffer)) {
+            profile_i = mode - power_modes;
+            goto cleanup; // This code fucking sucks babyyyyy
+        }
+    }
+
+    profile_i = 0;
+
+    cleanup:
+    pclose(pipe);
+    pthread_mutex_unlock(&profile_mutex);
+    return NULL;
+}
+
 void
 setup(void)
 {
+    // going off and getting the power mode
+    pthread_t thread;
+    pthread_create(&thread, NULL, &get_power_mode, NULL);
+
 	int i, sig[] = {SIGCHLD, SIGINT, SIGTERM, SIGPIPE};
 	struct sigaction sa = {.sa_flags = SA_RESTART, .sa_handler = handlesig};
 	sigemptyset(&sa.sa_mask);

@@ -44,6 +44,13 @@ const char *modes_labels[] = {
     "screenshot/file",
 };
 
+static char *power_modes[] = {
+    "power-saver",
+    "balanced",
+    "performance",
+    NULL
+};
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 //#define TAGCOUNT (9)
 static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
