@@ -44,6 +44,12 @@ const char *modes_labels[] = {
     "screenshot/file",
 };
 
+static char *power_modes[] = {
+    "power-saver",
+    "balanced",
+    "performance",
+};
+
 /* tagging - TAGCOUNT must be no greater than 31 */
 //#define TAGCOUNT (9)
 static char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -223,6 +229,19 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
+
+    // Keybinds for rofi, ig
+    {MODKEY, XKB_KEY_c, spawn, {.v = (const char*[]) {"rofi", "-show", "run", NULL}}},
+    {MODKEY, XKB_KEY_C, spawn, {.v = (const char*[]) {"rofi", "-show", "run", NULL}}},
+    {MODKEY, XKB_KEY_s, spawn, {.v = (const char*[]) {"rofi", "-show", "drun", NULL}}},
+    {MODKEY, XKB_KEY_S, spawn, {.v = (const char*[]) {"rofi", "-show", "drun", NULL}}},
+    {MODKEY, XKB_KEY_semicolon, spawn, {.v = (const char*[]) {"rofimoji", NULL}}},
+
+    // Keybind for toggling night light. TODO: have this setting be persistent between dwl restarts.
+    {MODKEY, XKB_KEY_apostrophe, spawn, {.v = (const char*[]) {"toggle-redshift", NULL}}},
+
+    // Keybind for cycling through CPU frequency scaling modes
+    {MODKEY, XKB_KEY_slash, cyclefreq, {.i = 1}},
 
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          entermode,           {.i = POWER} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,          entermode,           {.i = POWER} },
