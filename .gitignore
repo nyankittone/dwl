@@ -5,3 +5,7 @@ dwl
 .ccls-cache
 *.old
 *.patch
+/lib/*
+#/include/*
+/dwl-patches_patches_envcfg*
+
