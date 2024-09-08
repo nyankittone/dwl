@@ -1,7 +1,7 @@
 # My own patched version of dwl
 [dwl](https://codeberg.org/dwl/dwl) is a wlroots-based Wayland compositor inspired by
-suckless.org's dwm. It's designed to be a very small and for you to hack on; configuration is done
-by modifying the source code.
+suckless.org's [dwm](https://dwm.suckless.org/). It's designed to be a very small and for you to
+hack on; configuration is done by modifying the source code.
 
 This repo is a fork of `dwl`, with the patches I like applied to it, including some of my own.
 
