@@ -324,6 +324,7 @@ static void createpopup(struct wl_listener *listener, void *data);
 static void cursorconstrain(struct wlr_pointer_constraint_v1 *constraint);
 static void cursorframe(struct wl_listener *listener, void *data);
 static void cursorwarptohint(void);
+static void cyclefreq(const Arg *arg);
 static void destroydecoration(struct wl_listener *listener, void *data);
 static void destroydragicon(struct wl_listener *listener, void *data);
 static void destroyidleinhibitor(struct wl_listener *listener, void *data);
@@ -505,8 +506,10 @@ static const struct wlr_buffer_impl buffer_impl = {
     .end_data_ptr_access = bufdataend,
 };
 
+#define PROFILE_I_INVALID (int) -1
 static pthread_mutex_t profile_mutex = PTHREAD_MUTEX_INITIALIZER;
-static size_t profile_i = 0;
+static int profile_i = PROFILE_I_INVALID;
+static int power_modes_length = 0;
 
 #ifdef XWAYLAND
 static void activatex11(struct wl_listener *listener, void *data);
@@ -2267,7 +2270,7 @@ keypress(struct wl_listener *listener, void *data)
 	wlr_seat_keyboard_notify_key(seat, event->time_msec,
 			event->keycode, event->state);
 
-    // Hiding the cursor if any key is pressed. TODO: Add a config option for this!!!
+    /* Hiding the cursor if any key is pressed. */
     hidecursor(NULL);
 }
 
@@ -3092,16 +3095,22 @@ setsel(struct wl_listener *listener, void *data)
 	wlr_seat_set_selection(seat, event->source, event->serial);
 }
 
+/* I have some decently strong concerns regarding the performance of this code. I will optimize
+   later. */
 static void*
 get_power_mode(void *_) {
     pthread_mutex_lock(&profile_mutex);
-    // run the powerprofilesctl command lol
-    // if we get no output, that's probably an error
 
+    /* run the powerprofilesctl command lol
+       if we get no output, that's probably an error */
     FILE *pipe = popen("powerprofilesctl get", "r");
+    if(!pipe) {
+        goto popen_had_an_oopsie;
+    }
+
     char out_buffer[64];
 
-    // read a line (this code is probably super-slowwwww)
+    /* read a line (this code is probably super-slowwwww) */
     fgets(out_buffer, 64, pipe);
     out_buffer[63] = '\0';
 
@@ -3109,18 +3118,19 @@ get_power_mode(void *_) {
     if(out_buffer[last] == '\n')
         out_buffer[last] = '\0';
 
-    // get the index in power_modes we need
-    for(char **mode = power_modes; *mode; mode++) {
-        if(!strcmp(*mode, out_buffer)) {
-            profile_i = mode - power_modes;
-            goto cleanup; // This code fucking sucks babyyyyy
+    /* get the length of the power_modes thing */
+    power_modes_length = sizeof(power_modes) / sizeof(power_modes[0]);
+
+    /* get the index in power_modes we need */
+    for(int i = 0; i < power_modes_length; i++) {
+        if(!strcmp(power_modes[i], out_buffer)) {
+            profile_i = i;
+            break;
         }
     }
 
-    profile_i = 0;
-
-    cleanup:
     pclose(pipe);
+    popen_had_an_oopsie:
     pthread_mutex_unlock(&profile_mutex);
     return NULL;
 }
@@ -3358,6 +3368,33 @@ setup(void)
 
 	// Gtk functions are only allowed to be called from this thread.
 	pthread_create(&gtkthread, NULL, &gtkinit, NULL);
+}
+
+static void*
+actual_cyclefreq(void *arg) {
+    fputs("\33[1;32mHi!!!!\33[m\n", stdout);
+    /* Lock the mutex */
+    if(pthread_mutex_lock(&profile_mutex)) return NULL;
+
+    /* incriment */
+    profile_i = (profile_i + ((Arg*) arg)->i) % power_modes_length;
+    if(profile_i < 0) profile_i += power_modes_length;
+
+    /* Unlock the mutex */
+    if(pthread_mutex_unlock(&profile_mutex)) return NULL;
+
+    /* Run the funny command. Do I *actually* need to fork() here? */
+    fputs("\33[1;32mAbout to fork\33[m\n", stdout);
+    spawn(&(Arg){.v = (const char*[]){"switch-power", power_modes[profile_i], NULL}});
+    return NULL;
+}
+
+void
+cyclefreq(const Arg *arg) {
+    /* Immediately create a thread and let it run our power mode command, and fuck off.
+     * We don't want the whole compositor to hand because it's waiting for a command to finish. */
+    pthread_t thread;
+    pthread_create(&thread, NULL, &actual_cyclefreq, (void*) arg);
 }
 
 void

@@ -48,7 +48,6 @@ static char *power_modes[] = {
     "power-saver",
     "balanced",
     "performance",
-    NULL
 };
 
 /* tagging - TAGCOUNT must be no greater than 31 */
@@ -241,6 +240,8 @@ static const Key keys[] = {
     // Keybind for toggling night light. TODO: have this setting be persistent between dwl restarts.
     {MODKEY, XKB_KEY_apostrophe, spawn, {.v = (const char*[]) {"toggle-redshift", NULL}}},
 
+    // Keybind for cycling through CPU frequency scaling modes
+    {MODKEY, XKB_KEY_slash, cyclefreq, {.i = 1}},
 
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          entermode,           {.i = POWER} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_q,          entermode,           {.i = POWER} },

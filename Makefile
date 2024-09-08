@@ -13,7 +13,7 @@ DWLDEVCFLAGS = -g -pedantic -Wall -Wextra -Wdeclaration-after-statement \
 
 # CFLAGS / LDFLAGS
 PKGS      = wlroots-0.18 wayland-server xkbcommon libinput pixman-1 fcft $(XLIBS) gtk4 gtk4-layer-shell-0
-DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS) -Iinclude -std=c99
+DWLCFLAGS = `$(PKG_CONFIG) --cflags $(PKGS)` $(DWLCPPFLAGS) $(DWLDEVCFLAGS) $(CFLAGS) -Iinclude
 LDLIBS    = `$(PKG_CONFIG) --libs $(PKGS)` -lm $(LIBS) -Llib -lstatusnotifier-systray-gtk4
 
 all: dwl
