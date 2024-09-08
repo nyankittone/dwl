@@ -1,0 +1,13 @@
+#!/bin/sh
+# This file is public domain; see the LICENSE file located in the scripts directory.
+
+pkill -USR1 gammastep
+code=$?
+
+if ! [ "$code" = 0 ]; then
+    notify-send 'Failed to toggle night light!' "attempt yielded exit code $code"
+    exit
+fi
+
+notify-send 'Toggling night light!' 'sample text'
+

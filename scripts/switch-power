@@ -1,0 +1,26 @@
+#!/bin/sh
+# This file is public domain; see the LICENSE file located in the scripts directory.
+
+# Run the powerprofilesctl command
+if [ -z "${1+a}" ]; then
+    printf '\33[1;91mfatal:\33[m No arguments provided!\n'
+    exit 1
+fi
+
+captured_err="$(powerprofilesctl set "$1" 2>&1)"
+exit_code=$?
+
+if [ "$exit_code" != 0 ]; then
+    notify-send -u critical 'Failed to set power mode!' "$captured_err"
+    exit 2
+fi
+
+case "$1" in
+    power-saver) message='Your PC is now a <b>POTATO!</b>';;
+    balanced) message='Perfectly balanced, as all things should be.';;
+    performance) message='We are now ⚡⚡<b><i>BLAZINGLY FAST!!!</i></b>⚡⚡';;
+esac
+
+notify-send "Set power mode to \"$1\"." "$message"
+unset message
+
